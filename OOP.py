@@ -5,7 +5,8 @@ import turtle
 import random
 from PIL import Image
 from datetime import datetime
-from fractions import gcd
+from math import gcd
+
 
 class Spiro:
     def __init__(self,xc,yc,col,R,r,l):
@@ -96,9 +97,9 @@ class SpiriAnimator:
         # значення таймера в мілісекундах
         self.deltaT = 10
         # отримати розміри вікна
-        self.width = turtle.winfow_width()
-        self.height = turtle.winfow_height()
-        # створюйте об'єкти спіро
+        self.width = turtle.window_width()
+        self.height = turtle.window_height()
+        # створюйте об'єкти spiro
         self.spiros = []
         for i in range(N):
             # генерувати випадкові параметри
