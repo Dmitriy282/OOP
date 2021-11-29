@@ -32,7 +32,7 @@ class Spiro:
         self.col = col
         # приведіть r/R до найменшої форми шляхом поділу за допомогою GCD
         gcdValue = gcd(self.r,self.R)
-        self.nRot = self.r // gcdVal
+        self.nRot = self.r // gcdValue
         # отримати відношення радіусів
         self.k = r/float(R)
         # встановити колір
@@ -41,7 +41,7 @@ class Spiro:
         self.a = 0
 
         # перезапустіть малювання
-        def restart(self):
+    def restart(self):
             #встановити прапор
             self.drawingComplete = False
             #показати черепаху
@@ -56,7 +56,7 @@ class Spiro:
             self.t.down()
 
         # намалюйте все
-        def draw(self):
+    def draw(self):
         # намалюйте решту точок
             R, k, l = self.R, self.k, self.l
             for i in range(0,360*self.nRot + 1,self.step):
@@ -68,7 +68,7 @@ class Spiro:
             self.t.hideturtle()
 
         # оновлення за один крок
-        def update(self):
+    def update(self):
         # пропустити, якщо зроблено
             if self.drawingComplete:
                 return
@@ -88,7 +88,7 @@ class Spiro:
                 self.t.hideturtle()
 
         # очистити все
-        def clear(self):
+    def clear(self):
             self.t.clear()
 # Клас для анімації спірографів
 class SpiriAnimator:
@@ -108,7 +108,7 @@ class SpiriAnimator:
             spiro = Spiro(*rparams)
             self.spiros.append(spiro)
         # таймер виклику
-        turtle.ontimer.append(spiro)
+        turtle.ontimer(self.update,self.deltaT)
         # перезапустіть креслення sprio
         def restart(self):
             for spiro in self.spiros:
@@ -122,7 +122,7 @@ class SpiriAnimator:
                 spiro.restart()
 
         # генерувати випадкові параметри
-        def genRandomParams(self):
+    def genRandomParams(self):
             width, height = self.width, self.height
             R = random.randint(50, min(width, height)//2)
             r = random.randint(10, 9*R//10)
@@ -133,7 +133,7 @@ class SpiriAnimator:
                random.random(),
                random.random())
             return (xc, yc, col, R, r, l)
-        def update(self):
+    def update(self):
          # оновити всі spiros
             nComplete = 0
             for spiro in self.spiros:
@@ -145,12 +145,15 @@ class SpiriAnimator:
                 # якщо всі spiros завершені, перезапустіть
 
         # увімкнути/вимкнути черепаху
-        def toggleTurtles(self):
+    def toggleTurtles(self):
             for spyro in self.spiros:
                 if spiro.t.isvisible():
                     spiro.t.hideturtle()
                 else:
                     spiro.t.showturtle()
+
+
+
 
 # зберегти spiro до зображення
 def saveDrawing():
