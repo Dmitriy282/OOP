@@ -1,3 +1,12 @@
+import sys, random, argparse
+import numpy as np
+import math
+import turtle
+import random
+from PIL import Image
+from datetime import datetime
+from fractions import gcd
+
 class Spiro:
     def __init__(self,xc,yc,col,R,r,l):
         # створити власну черепаху
@@ -133,3 +142,84 @@ class SpiriAnimator:
                 if spiro.drawingComplete:
                     nComplete+=1
                 # якщо всі spiros завершені, перезапустіть
+
+        # увімкнути/вимкнути черепаху
+        def toggleTurtles(self):
+            for spyro in self.spiros:
+                if spiro.t.isvisible():
+                    spiro.t.hideturtle()
+                else:
+                    spiro.t.showturtle()
+
+# зберегти spiro до зображення
+def saveDrawing():
+    # сховай черепаху
+    turtle.hideturtle()
+    # створити унікальне ім'я файлу
+    dateStr = (datetime.now()).strftime("%d%b%Y-%H%M%S")
+    fileName = 'spiro-' + dateStr
+    print('збереження малюнка до %s.eps/png' % fileName)
+    # отримати tkinter canvas
+    canvas = turtle.getcanvas()
+    # зберегти зображення постципту
+    canvas.postscript(file = fileName + '.eps')
+    # використовуйте PIL для перетворення в PNG
+    img = Image.open(fileName+'.eps')
+    img.save(fileName + '.png', 'png')
+    # показати черепаху
+    turtle.showturtle()
+
+# функція main().
+def main():
+    # використовуйте sys.argv, якщо потрібно
+    print('генерування спірограф...')
+    # створити парсер
+    descStr = """Ця програма малює спірографи за допомогою модуля Turtle.
+        При запуску без аргументів ця програма малює випадкові спірографи.
+
+        термінологія:
+        R: радіус зовнішнього кола.
+        r: радіус внутрішнього кола.
+        l: відношення відстані отвору до r.
+        """
+    parser = argparse.ArgumentParser(description=descStr)
+    # додати очікувані аргументи
+    parser.add_argument( '--sparams' , nargs = 3 , dest = 'sparams' , required = False ,
+                        help = "Три аргументи в sparams: R, r, l.")
+
+    # розбір аргументів
+    args = parser.parse_args()
+    # встановити на 80% ширини екрана
+    turtle.setup(width=0.8)
+    # встановити форму курсору
+    turtle.shape('turtle')
+
+    # встановити назву
+    turtle.title("Spinographs")
+    # додати обробник ключа для збереження зображень
+    turtle.onkey(saveDrawing(),"s")
+    # почніть слухати
+    turtle.listen()
+
+    # приховати основний курсор черепахи
+    turtle.hideturtle()
+    # перевіряє аргументи та малює
+    if args.sparams:
+        params = [float(x) for x in args.sparams]
+        # намалювати спірограф із заданими параметрами
+        # чорний за замовчуванням
+        col = (0.0, 0.0, 0.0)
+        spiro = Spiro(0, 0, col, *params)
+        spiro.draw()
+    else:
+        # створити об'єкт аніматора
+        spiroAnim = SpiriAnimator(4)
+        # додати обробник клавіш, щоб перемикати курсор черепахи
+        turtle.onkey(spiroAnim.toggleTurtles,'t')
+        # додати обробник ключа, щоб перезапустити анімацію
+        turtle.onkey(spiroAnim.restart,'space')
+    # почніть основний цикл черепахи
+    turtle.mainloop()
+# виклик основний
+if __name__ == '__main__':
+    main()
