@@ -75,14 +75,14 @@ class Spiro:
             # кут збільшення
             self.a += self.step
             # крок малювання
-            R,k,l = self.R,self.k,self,l
+            R,k,l = self.R,self.k,self.l
             # встановити кут
-            a = math.radians(a)
+            a = math.radians(self.a)
             x = R * ((1 - k) * math.cos(a) + l * k * math.cos((1 - k) * a / k))
             y = R * ((1 - k) * math.sin(a) - l * k * math.sin((1 - k) * a / k))
             self.t.setpos(self.xc + x, self.yc + y)
              # перевірити, чи завершено малювання, і встановити прапор
-            if self.a >=360*self.n.Rot:
+            if self.a >=360*self.nRot:
                 self.drawingComplete = True
                 # готово - сховати черепаху
                 self.t.hideturtle()
@@ -95,6 +95,7 @@ class SpiriAnimator:
     # конструктор
     def __init__(self,N):
         # значення таймера в мілісекундах
+        self.restart = 1
         self.deltaT = 10
         # отримати розміри вікна
         self.width = turtle.window_width()
