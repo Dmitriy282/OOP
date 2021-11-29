@@ -29,3 +29,107 @@ class Spiro:
         self.t.color(*col)
         # зберігати поточний кут
         self.a = 0
+
+        # перезапустіть малювання
+        def restart(self):
+            #встановити прапор
+            self.drawingComplete = False
+            #показати черепаху
+            self.t.showturtle()
+            #перейти до першої точки
+            self.t.up()
+            R,k,l = self.R,self.k,self.l
+            a = 0.0
+            x = R * ((1 - k) * math.cos(a) + l * k * math.cos((1 - k) * a / k))
+            y = R * ((1 - k) * math.sin(a) - l * k * math.sin((1 - k) * a / k))
+            self.t.setpos(self.xc + x, self.yc + y)
+            self.t.down()
+
+        # намалюйте все
+        def draw(self):
+        # намалюйте решту точок
+            R, k, l = self.R, self.k, self.l
+            for i in range(0,360*self.nRot + 1,self.step):
+                a = math.radians(i)
+                x = R * ((1 - k) * math.cos(a) + l * k * math.cos((1 - k) * a / k))
+                y = R * ((1 - k) * math.sin(a) - l * k * math.sin((1 - k) * a / k))
+                self.t.setpos(self.xc + x, self.yc + y)
+        # готово - сховати черепаху
+            self.t.hideturtle()
+
+        # оновлення за один крок
+        def update(self):
+        # пропустити, якщо зроблено
+            if self.drawingComplete:
+                return
+            # кут збільшення
+            self.a += self.step
+            # крок малювання
+            R,k,l = self.R,self.k,self,l
+            # встановити кут
+            a = math.radians(a)
+            x = R * ((1 - k) * math.cos(a) + l * k * math.cos((1 - k) * a / k))
+            y = R * ((1 - k) * math.sin(a) - l * k * math.sin((1 - k) * a / k))
+            self.t.setpos(self.xc + x, self.yc + y)
+             # перевірити, чи завершено малювання, і встановити прапор
+            if self.a >=360*self.n.Rot:
+                self.drawingComplete = True
+                # готово - сховати черепаху
+                self.t.hideturtle()
+
+        # очистити все
+        def clear(self):
+            self.t.clear()
+# Клас для анімації спірографів
+class SpiriAnimator:
+    # конструктор
+    def __init__(self,N):
+        # значення таймера в мілісекундах
+        self.deltaT = 10
+        # отримати розміри вікна
+        self.width = turtle.winfow_width()
+        self.height = turtle.winfow_height()
+        # створюйте об'єкти спіро
+        self.spiros = []
+        for i in range(N):
+            # генерувати випадкові параметри
+            rparams = self.genRandomParams()
+            # встановити параметри spiro
+            spiro = Spiro(*rparams)
+            self.spiros.append(spiro)
+        # таймер виклику
+        turtle.ontimer.append(spiro)
+        # перезапустіть креслення sprio
+        def restart(self):
+            for spiro in self.spiros:
+                # очистити
+                spiro.clear()
+                # генерувати випадкові параметри
+                rparams = self.getRandomsParams()
+                # встановити параметри spiro
+                spiro.setparams(*rparams)
+                # перезапустіть малювання
+                spiro.restart()
+
+        # генерувати випадкові параметри
+        def genRandomParams(self):
+            width, height = self.width, self.height
+            R = random.randint(50, min(width, height)//2)
+            r = random.randint(10, 9*R//10)
+            l = random.uniform(0.1, 0.9)
+            xc = random.randint(-width//2, width//2)
+            yc = random.randint(-height//2, height//2)
+            col = (random.random(),
+               random.random(),
+               random.random())
+            return (xc, yc, col, R, r, l)
+        def update(self):
+         # оновити всі spiros
+            nComplete = 0
+            for spiro in self.spiros:
+                # оновлення
+                spiro.update()
+                # кількість виконаних
+                if spiro.drawingComplete:
+                    nComplete+=1
+                # якщо всі spiros завершені, перезапустіть
